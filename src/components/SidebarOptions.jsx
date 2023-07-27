@@ -4,6 +4,7 @@ import { collection, addDoc } from "firebase/firestore";
 // import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { enterRoom } from "../appSlice";
+import { enterLoading } from "../loadingSlice";
 // eslint-disable-next-line react/prop-types
 const SidebarOptions = ({ id, Icon, title, addChannelOption }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const SidebarOptions = ({ id, Icon, title, addChannelOption }) => {
           roomId: id,
         })
       );
+      dispatch(enterLoading(true));
     }
   };
   return (

@@ -70,6 +70,7 @@ const SideBarContainer = styled.div`
     background-color: #49274b;
     transition: all 0.5s;
   }
+  overflow-y: scroll;
 `;
 const SideBarHeader = styled.div`
   > .MuiSvgIcon-root {

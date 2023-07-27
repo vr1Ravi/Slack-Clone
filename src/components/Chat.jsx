@@ -13,11 +13,18 @@ import {
   orderBy,
   getDocs,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+import { useDispatch } from "react-redux";
+import { enterLoading } from "../loadingSlice";
 const Chat = () => {
   const roomId = useSelector((state) => state.app.roomId);
+  const messInstance = useSelector((state) => state.messageinstance.value);
+  const loadingState = useSelector((state) => state.loading.value);
   const [roomName, setRoomName] = useState("Room-Name");
   const [messagesSnapshot, setMessagesSnapshot] = useState(null);
+  const emptyChatRef = useRef(null);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (roomId) {
       const getRoomDetails = async () => {
@@ -29,14 +36,16 @@ const Chat = () => {
           collection(db, "rooms", roomId, "messages"),
           orderBy("timestamp", "asc")
         );
-        console.log(q);
+        // console.log(q);
         const querySnapshot = await getDocs(q);
         setMessagesSnapshot(querySnapshot);
-        console.log(querySnapshot.docs.map((doc) => doc.data()));
+        // console.log(querySnapshot.docs.map((doc) => doc.data()));
       };
       getRoomDetails();
     }
-  }, [roomId]);
+    emptyChatRef?.current?.scrollIntoView();
+  }, [roomId, messInstance, loadingState]);
+  dispatch(enterLoading(false));
 
   return (
     <ChatContainer>
@@ -70,6 +79,7 @@ const Chat = () => {
             />
           );
         })}
+        <EmptyChatBox ref={emptyChatRef} />
       </ChatMessages>
       <ChatInput roomName={roomName} roomId={roomId} />
     </ChatContainer>
@@ -84,6 +94,10 @@ const ChatContainer = styled.div`
   flex-grow: 1;
   overflow-y: scroll;
   margin-top: 2.5rem;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 const Header = styled.div`
   display: flex;
@@ -116,3 +130,6 @@ const HeaderRight = styled.div`
   }
 `;
 const ChatMessages = styled.div``;
+const EmptyChatBox = styled.div`
+  padding-bottom: 5rem;
+`;
