@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
 const ChatMessage = ({ message, timestamp, user, userImage }) => {
+  console.log(timestamp);
   return (
     <MessageZone>
       <img src={userImage} alt="userImg" />
       <MessageInfo>
         <h4>
-          {user} <span>{new Date(timestamp?.toDate()).toUTCString()}</span>
+          {user} <span>{new Date(timestamp?.toDate()).toLocaleString()}</span>
         </h4>
         <p>{message}</p>
       </MessageInfo>

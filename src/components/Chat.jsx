@@ -14,17 +14,12 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
-import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { useDispatch } from "react-redux";
-import { enterLoading } from "../loadingSlice";
 const Chat = () => {
   const roomId = useSelector((state) => state.app.roomId);
   const messInstance = useSelector((state) => state.messageinstance.value);
-  const loadingState = useSelector((state) => state.loading.value);
   const [roomName, setRoomName] = useState("Room-Name");
   const [messagesSnapshot, setMessagesSnapshot] = useState(null);
   const emptyChatRef = useRef(null);
-  const dispatch = useDispatch();
   useEffect(() => {
     if (roomId) {
       const getRoomDetails = async () => {
@@ -43,45 +38,60 @@ const Chat = () => {
       };
       getRoomDetails();
     }
-    emptyChatRef?.current?.scrollIntoView();
-  }, [roomId, messInstance, loadingState]);
-  dispatch(enterLoading(false));
-
+    emptyChatRef?.current?.scrollIntoView({
+      block: "nearest",
+      behavior: "smooth",
+    });
+  }, [roomId, messInstance]);
+  setTimeout(() => {
+    emptyChatRef?.current?.scrollIntoView({
+      block: "nearest",
+      behavior: "smooth",
+    });
+  }, 100);
   return (
     <ChatContainer>
-      <Header>
-        <HeaderLeft>
-          <h4>
-            <strong>{`# ${roomName}`}</strong>
-          </h4>
-          <StarBorderOutlinedIcon />
-        </HeaderLeft>
-        <HeaderRight>
-          <p>
-            {" "}
-            <InfoOutlinedIcon />
-            Details
-          </p>
-        </HeaderRight>
-      </Header>
+      {roomId && (
+        <>
+          <Header>
+            <HeaderLeft>
+              <h4>
+                <strong>{`# ${roomName}`}</strong>
+              </h4>
+              <StarBorderOutlinedIcon />
+            </HeaderLeft>
+            <HeaderRight>
+              <p>
+                {" "}
+                <InfoOutlinedIcon />
+                Details
+              </p>
+            </HeaderRight>
+          </Header>
 
-      <ChatMessages>
-        {messagesSnapshot?.docs.map((doc) => {
-          const { message, timestamp, user, userImage } = doc.data();
+          <ChatMessages>
+            {messagesSnapshot?.docs.map((doc) => {
+              const { message, timestamp, user, userImage } = doc.data();
 
-          return (
-            <ChatMessage
-              key={doc.id}
-              message={message}
-              timestamp={timestamp}
-              user={user}
-              userImage={userImage}
-            />
-          );
-        })}
-        <EmptyChatBox ref={emptyChatRef} />
-      </ChatMessages>
-      <ChatInput roomName={roomName} roomId={roomId} />
+              return (
+                <ChatMessage
+                  key={doc.id}
+                  message={message}
+                  timestamp={timestamp}
+                  user={user}
+                  userImage={userImage}
+                />
+              );
+            })}
+            <EmptyChatBox ref={emptyChatRef} />
+          </ChatMessages>
+          <ChatInput
+            emptyChatRef={emptyChatRef}
+            roomName={roomName}
+            roomId={roomId}
+          />
+        </>
+      )}
     </ChatContainer>
   );
 };

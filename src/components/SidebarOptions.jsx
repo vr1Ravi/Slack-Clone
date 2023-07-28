@@ -1,14 +1,11 @@
 import { db } from "../firebase";
 import styled from "styled-components";
 import { collection, addDoc } from "firebase/firestore";
-// import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { enterRoom } from "../appSlice";
-import { enterLoading } from "../loadingSlice";
 // eslint-disable-next-line react/prop-types
 const SidebarOptions = ({ id, Icon, title, addChannelOption }) => {
   const dispatch = useDispatch();
-  // const roomId = useSelector((state) => state.app.roomId);
   const createChannel = async () => {
     const channelName = prompt("Please Enter the Channel Name");
     try {
@@ -30,7 +27,6 @@ const SidebarOptions = ({ id, Icon, title, addChannelOption }) => {
           roomId: id,
         })
       );
-      dispatch(enterLoading(true));
     }
   };
   return (
@@ -66,6 +62,19 @@ const SidebarOptionsContainer = styled.div`
 
   > span {
     padding: 0.5rem;
+  }
+  @media screen and (max-width: 538px) {
+    > h3 {
+      font-size: 10px;
+    }
+    > .MuiSvgIcon-root {
+      font-size: 13px;
+    }
+  }
+  @media screen and (max-width: 407px) {
+    > h3 {
+      font-size: 9px;
+    }
   }
 `;
 const SidebarOptionsChannel = styled.h3`

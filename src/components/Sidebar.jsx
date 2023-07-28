@@ -14,12 +14,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import { collection } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 const Sidebar = () => {
   // eslint-disable-next-line no-unused-vars
   const [channels, loading, error] = useCollection(collection(db, "rooms"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
+  const [user] = useAuthState(auth);
   return (
     <SideBarContainer>
       <SideBarHeader>
@@ -27,7 +29,7 @@ const Sidebar = () => {
           <h2>Chit-Chat</h2>
           <h3>
             <FiberManualRecordIcon />
-            Ravi Jha
+            {user?.displayName}
           </h3>
         </SideBarInfo>
         <CreateIcon />
@@ -58,7 +60,7 @@ const SideBarContainer = styled.div`
   background-color: rgb(63 14 64);
   flex: 0.3;
   border-top: 1px solid #49274b;
-  margin-top: 2.5rem;
+  margin-top: 3.5rem;
   max-width: 260px;
   > hr {
     margin-top: 0.5rem;
@@ -84,6 +86,16 @@ const SideBarHeader = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0.5rem;
+
+  @media screen and (max-width: 538px) {
+    > .MuiSvgIcon-root {
+      position: absolute;
+      display: none;
+    }
+  }
+  @media screen and (max-width: 407px) {
+    font-size: 13px;
+  }
 `;
 const SideBarInfo = styled.div`
   flex: 1;
@@ -104,6 +116,10 @@ const SideBarInfo = styled.div`
       font-size: 0.8rem;
       margin-top: 0.1rem;
       margin-right: 0.2rem;
+    }
+
+    @media screen and (max-width: 407px) {
+      font-size: 13px;
     }
   }
 `;

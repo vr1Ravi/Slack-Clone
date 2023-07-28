@@ -1,15 +1,21 @@
 import styled from "styled-components";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Avatar } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import SearchIcon from "@mui/icons-material/Search";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
 const Header = () => {
+  const [user] = useAuthState(auth);
+  // console.log("user -->", user);
   return (
     <HeaderContainer>
       {/* Header-Left */}
       <HeaderLeft>
         <HeaderAvatar
-        //To-Do
+          onClick={() => auth.signOut()}
+          src={user?.photoURL}
+          alt={user?.displayName}
         />
         <HeaderTime />
       </HeaderLeft>
@@ -30,6 +36,7 @@ const Header = () => {
 export default Header;
 
 const HeaderContainer = styled.div`
+  padding: 0.5rem 0;
   display: flex;
   background-color: --slack-color;
   position: fixed;
@@ -47,13 +54,24 @@ const HeaderLeft = styled.div`
   justify-content: space-between;
 
   > .MuiSvgIcon-root {
-    /* margin-left: auto; */
     margin-right: 30px;
   }
+  @media screen and (max-width: 538px) {
+    > .MuiSvgIcon-root {
+      margin-right: 10px;
+    }
+  }
+  @media screen and (max-width: 408px) {
+    margin-left: 12px;
+    > .MuiSvgIcon-root {
+      margin-right: 1px;
+    }
+  }
 `;
-const HeaderAvatar = styled(AccountCircleIcon)`
+const HeaderAvatar = styled(Avatar)`
   cursor: pointer;
-  font-size: 40px !important;
+  font-size: 1rem !important;
+
   color: white;
   :hover {
     transition: 0.5s ease-in-out;

@@ -2,22 +2,14 @@
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import styled from "styled-components";
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-  getDoc,
-  query,
-  collection,
-  orderBy,
-  getDocs,
-  addDoc,
-} from "firebase/firestore";
-import { db } from "../firebase";
+import { serverTimestamp, collection, addDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { useDispatch } from "react-redux";
 import { setMessageInstance } from "../messageInstanceSlice";
-const ChatInput = ({ roomName, roomId }) => {
+import { useAuthState } from "react-firebase-hooks/auth";
+const ChatInput = ({ roomName, roomId, emptyChatRef }) => {
   const [inputVal, setInputValue] = useState("");
+  const [user] = useAuthState(auth);
   const dipatch = useDispatch();
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -27,13 +19,16 @@ const ChatInput = ({ roomName, roomId }) => {
       {
         message: inputVal,
         timestamp: serverTimestamp(),
-        user: "ravi jha",
-        userImage: `https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg`,
+        user: user?.displayName,
+        userImage: user?.photoURL,
       },
       { merge: true }
     );
     dipatch(setMessageInstance(inputVal));
     setInputValue("");
+    emptyChatRef?.current?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
   return (
     <ChatInputBox>

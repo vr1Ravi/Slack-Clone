@@ -16,6 +16,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 // eslint-disable-next-line no-unused-vars
-const provider = new GoogleAuthProvider();
+const provider = new GoogleAuthProvider(app);
 
-export { db, auth };
+export { db, auth, provider };

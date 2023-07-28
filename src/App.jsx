@@ -6,26 +6,42 @@ import Sidebar from "./components/Sidebar";
 import { Provider } from "react-redux";
 import store from "./store";
 import Chat from "./components/Chat";
+import Login from "./components/Login";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase";
+import Loader from "./components/Loader";
 function App() {
+  const [user, loading] = useAuthState(auth);
+
   return (
     <div className="app">
-      <Header />
-      <BrowserRouter>
-        <Provider store={store}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <AppBody>
-                  <Sidebar />
-                  {/* Chat */}
-                  <Chat />
-                </AppBody>
-              }
-            />
-          </Routes>
-        </Provider>
-      </BrowserRouter>
+      {!user ? (
+        loading ? (
+          <Loader />
+        ) : (
+          <Login />
+        )
+      ) : (
+        <>
+          <Header />
+          <BrowserRouter>
+            <Provider store={store}>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <AppBody>
+                      <Sidebar />
+                      {/* Chat */}
+                      <Chat />
+                    </AppBody>
+                  }
+                />
+              </Routes>
+            </Provider>
+          </BrowserRouter>
+        </>
+      )}
     </div>
   );
 }
