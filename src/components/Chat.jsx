@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
+import Instructions from "./Instructions";
 import { db } from "../firebase";
 import {
   getDoc,
@@ -25,7 +26,6 @@ const Chat = () => {
       const getRoomDetails = async () => {
         const docRef = doc(db, "rooms", roomId);
         const docSnap = await getDoc(docRef);
-        console.log(docSnap.data().name);
         setRoomName(docSnap.data().name);
         const q = query(
           collection(db, "rooms", roomId, "messages"),
@@ -38,10 +38,6 @@ const Chat = () => {
       };
       getRoomDetails();
     }
-    emptyChatRef?.current?.scrollIntoView({
-      block: "nearest",
-      behavior: "smooth",
-    });
   }, [roomId, messInstance]);
   setTimeout(() => {
     emptyChatRef?.current?.scrollIntoView({
@@ -51,7 +47,7 @@ const Chat = () => {
   }, 100);
   return (
     <ChatContainer>
-      {roomId && (
+      {roomId ? (
         <>
           <Header>
             <HeaderLeft>
@@ -68,7 +64,6 @@ const Chat = () => {
               </p>
             </HeaderRight>
           </Header>
-
           <ChatMessages>
             {messagesSnapshot?.docs.map((doc) => {
               const { message, timestamp, user, userImage } = doc.data();
@@ -85,12 +80,15 @@ const Chat = () => {
             })}
             <EmptyChatBox ref={emptyChatRef} />
           </ChatMessages>
+
           <ChatInput
             emptyChatRef={emptyChatRef}
             roomName={roomName}
             roomId={roomId}
           />
         </>
+      ) : (
+        <Instructions />
       )}
     </ChatContainer>
   );
@@ -141,5 +139,5 @@ const HeaderRight = styled.div`
 `;
 const ChatMessages = styled.div``;
 const EmptyChatBox = styled.div`
-  padding-bottom: 5rem;
+  padding-bottom: 10rem;
 `;

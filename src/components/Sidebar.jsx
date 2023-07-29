@@ -62,6 +62,7 @@ const SideBarContainer = styled.div`
   border-top: 1px solid #49274b;
   margin-top: 3.5rem;
   max-width: 260px;
+  overflow-y: scroll;
   > hr {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
@@ -72,7 +73,6 @@ const SideBarContainer = styled.div`
     background-color: #49274b;
     transition: all 0.5s;
   }
-  overflow-y: scroll;
 `;
 const SideBarHeader = styled.div`
   > .MuiSvgIcon-root {

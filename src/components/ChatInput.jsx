@@ -7,6 +7,7 @@ import { auth, db } from "../firebase";
 import { useDispatch } from "react-redux";
 import { setMessageInstance } from "../messageInstanceSlice";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { BsSendFill } from "react-icons/bs";
 const ChatInput = ({ roomName, roomId, emptyChatRef }) => {
   const [inputVal, setInputValue] = useState("");
   const [user] = useAuthState(auth);
@@ -39,7 +40,7 @@ const ChatInput = ({ roomName, roomId, emptyChatRef }) => {
           placeholder={`Message #${roomName}`}
         />
         <Button type="Submit" onClick={sendMessage}>
-          Send
+          <BsSendFill />
         </Button>
       </form>
     </ChatInputBox>
@@ -70,5 +71,14 @@ const ChatInputBox = styled.div`
   }
   > form > button {
     display: none !important;
+    position: fixed;
+    right: 1rem;
+    bottom: 2.5rem;
+    padding: 0;
+  }
+  @media screen and (max-width: 600px) {
+    > form > button {
+      display: block !important;
+    }
   }
 `;

@@ -34,4 +34,14 @@ const MessageInfo = styled.div`
     font-weight: 300;
     margin-left: 0.4rem;
   }
+  @media screen and (max-width: 400px) {
+    > h4 {
+      font-size: 12px;
+    }
+  }
+  @media screen and (max-width: 300px) {
+    > h4 {
+      font-size: 10px;
+    }
+  }
 `;
