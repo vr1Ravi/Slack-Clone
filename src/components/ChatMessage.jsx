@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
 const ChatMessage = ({ message, timestamp, user, userImage }) => {
-  console.log(timestamp);
   return (
     <MessageZone>
       <img src={userImage} alt="userImg" />

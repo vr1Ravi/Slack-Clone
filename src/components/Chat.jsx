@@ -12,7 +12,7 @@ import {
   query,
   collection,
   orderBy,
-  getDocs,
+  onSnapshot,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 const Chat = () => {
@@ -21,6 +21,9 @@ const Chat = () => {
   const [roomName, setRoomName] = useState("Room-Name");
   const [messagesSnapshot, setMessagesSnapshot] = useState(null);
   const emptyChatRef = useRef(null);
+
+  //   import { doc, onSnapshot } from "firebase/firestore";
+
   useEffect(() => {
     if (roomId) {
       const getRoomDetails = async () => {
@@ -31,10 +34,10 @@ const Chat = () => {
           collection(db, "rooms", roomId, "messages"),
           orderBy("timestamp", "asc")
         );
-        // console.log(q);
-        const querySnapshot = await getDocs(q);
-        setMessagesSnapshot(querySnapshot);
-        // console.log(querySnapshot.docs.map((doc) => doc.data()));
+        onSnapshot(q, (querySnapshot) => {
+          setMessagesSnapshot(querySnapshot);
+          console.log(querySnapshot.docs.map((doc) => doc.data()));
+        });
       };
       getRoomDetails();
     }

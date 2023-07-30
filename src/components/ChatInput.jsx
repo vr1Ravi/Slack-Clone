@@ -8,13 +8,20 @@ import { useDispatch } from "react-redux";
 import { setMessageInstance } from "../messageInstanceSlice";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BsSendFill } from "react-icons/bs";
+import { useRef } from "react";
 const ChatInput = ({ roomName, roomId, emptyChatRef }) => {
   const [inputVal, setInputValue] = useState("");
   const [user] = useAuthState(auth);
+  const inputRef = useRef(null);
   const dipatch = useDispatch();
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!roomId) return false;
+    if (!inputVal) {
+      inputRef.current.style.border = "2px solid red";
+      inputRef.current.placeholder = "Please enter a message";
+      return false;
+    }
     await addDoc(
       collection(db, "rooms", roomId, "messages"),
       {
@@ -35,7 +42,12 @@ const ChatInput = ({ roomName, roomId, emptyChatRef }) => {
     <ChatInputBox>
       <form>
         <input
-          onChange={(e) => setInputValue(e.target.value)}
+          ref={inputRef}
+          onChange={(e) => {
+            inputRef.current.style.border = "1px solid gray";
+            inputRef.current.placeholder = `Message #${roomName}`;
+            setInputValue(e.target.value);
+          }}
           value={inputVal}
           placeholder={`Message #${roomName}`}
         />
